@@ -1,16 +1,12 @@
 import random
 
-first = 1
+first = 1 # 수 범위 설정
 last = 10
 
-times = []
-prob = []
-response = []
-r = 0
+response = [] # 사용자 응답
+times = [0] * (last-first+1) #숫자당 나온 횟수
 
-for i in range(first, last+1):
-    times.append(0)
-
+#응답 받기 --------------------------
 working = True
 
 while working:
@@ -26,7 +22,8 @@ while working:
             response.append(int(r))
             times[int(r)-1] += 1
 
-x = 20
+prob = [] # 숫자 각각 뽑힐 수 있는 상대적 확률
+x = 20 # 확률 기본값 (모든 숫자 상대적 수치의 최솟값)
 
 for i in times:
     prob.append(max(times) - i + x)
