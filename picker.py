@@ -58,11 +58,5 @@ for i in result:
         counting[j] += i[j]
 
 print(f"\nTimes number inputed : {times}\n"+
-f"Mathematical probablity : {percentage(prob)}\n"+
-f"\nTimes number picked : {counting}\n"+
+f"Times number picked : {counting}\n"+
 f"Statistical probablity : {percentage(counting)}\n\n")
-print(prob)
-
-print(sum(percentage(prob)))
-print(sum(percentage(counting)))
-print(sum(counting))
