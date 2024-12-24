@@ -7,7 +7,7 @@ last = 10 # picks 보다 커야함함
 
 x = 10 # 확률 기본값 (모든 숫자 상대적 수치의 최솟값)
 
-repeat = 100**2 # 사람 수
+repeat = 10 ** 5 # 사람 수
 picks = 5 # 뽑을 번호 개수
 
 
@@ -38,13 +38,10 @@ def pick(repeat:int,pick:int,initprob:list,numrange:tuple)->list: # 뽑기 (뽑�
 
 def percentage(probablity:list) -> list: # 상대적 확률을 절대적 확률로 변환
     total = sum(probablity)
-    return [round(i/total,3) * 100 for i in probablity]
+    return [round(i/total,5) * 100 for i in probablity]
 
 # dbData = ReadDB.readDB()
-data = []
 dbData = pick(repeat,picks,[1]*(last-first+1),(first,last))
-for numbers in dbData:
-    data.append(list(map(lambda n: int(n), numbers)))
 
 times = [0] * (last-first+1) # 숫자당 나온 횟수
 prob = [] # 숫자 각각 뽑힐 수 있는 상대적 확률률
@@ -53,8 +50,8 @@ for numbers in dbData:
     for n in range(len(numbers)):
         times[n] += numbers[n]
 
-for i in times: # 상대적 확률 설정
-    prob.append(max(times) - i + x)
+for i in range(len(times)): # 상대적 확률 설정
+    prob.append(max(times) - times[i] + x)
 
 result = pick(1, picks, prob, (first, last))
 response = pick(repeat, picks, [1]*(last-first+1), (first,last))
@@ -68,8 +65,6 @@ for p in range(len(response)):
             matches[p] += 1
     winners[matches[p]] += 1
 
-print(dbData)
-print(data)
 print(times)
 print(prob)
 print(winners)
