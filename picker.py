@@ -3,9 +3,11 @@
 import random
 
 first = 1 # 수 범위 설정
-last = 12
+last = 11 # picks 보다 커야함함
 
-repeat = 300 # 사람 수
+x = 10 # 확률 기본값 (모든 숫자 상대적 수치의 최솟값)
+
+repeat = 100**2 # 사람 수
 picks = 5 # 뽑을 번호 개수
 
 
@@ -45,9 +47,7 @@ for numbers in dbData:
     data.append(list(map(lambda n: int(n), numbers)))
 
 times = [0] * (last-first+1) # 숫자당 나온 횟수
-prob = [] # 숫자 각각 뽑힐 수 있는 상대적 확률
-x = 0 # 확률 기본값 (모든 숫자 상대적 수치의 최솟값)
-# 실험 결과, x 값이 작을 수록 확률 떨어짐짐
+prob = [] # 숫자 각각 뽑힐 수 있는 상대적 확률률
 
 for numbers in data:
     for n in numbers:
@@ -69,6 +69,5 @@ for p in range(len(response)):
     winners[matches[p]] += 1
 
 print(winners)
-print(percentage(winners))
 for i in range(len(winners)):
-    print(f'{picks-i+1}등 : {percentage(winners)[i]}')
+    print(f'{picks-i+1}등 : {percentage(winners)[i]} (300명중 {round(3*percentage(winners)[i])}명 꼴)')
