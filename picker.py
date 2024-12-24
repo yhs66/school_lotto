@@ -3,29 +3,17 @@
 import random
 
 first = 1 # 수 범위 설정
-last = 10
+last = 12
 
-repeat = 10**5 # 뽑기 반복 횟수
+repeat = 300 # 사람 수
 picks = 5 # 뽑을 번호 개수
 
-# dbData = ReadDB.readDB() # 사용자 응답
-data = []
-dbData = [['1', '2', '3', '4', '5'], ['1', '6', '7', '9', '10'], ['2', '7', '6', '3', '4'], ['1', '2', '7', '4', '10'], ['1', '7', '2', '4', '5'], ['1', '2', '3', '7', '8'], ['3', '4', '8', '7', '4'], ['8', '8', '4', '6', '5'], ['10', '4', '9', '4', '4'], ['1', '6', '7', '2', '4'], ['1', '2', '6', '8', '3'], ['1', '2', '7', '6', '8'], ['1', '6', '2', '4', '9'], ['1', '2', '7', '6', '5'], ['1', '7', '7', '8', '9'], ['2', '9', '8', '7', '1'], ['3', '7', '2', '3', '9'], ['9', '7', '1', '4', '10'], ['2', '8', '7', '1', '3'], ['1', '2', '7', '6', '8'], ['1', '2', '7', '6', '8'], ['3', '1', '7', '8', '9'], ['2', '7', '6', '1', '9'], ['2', '1', '7', '8', '3'], ['1', '2', '7', '9', '5'], ['1', '2', '7', '6', '8'], ['9', '10', '5', '3', '7'], ['2', '3', '8', '1', '6'], ['8', '2', '5', '10', '8'], ['7', '4', '2', '10', '3'], ['1', '2', '7', '9', '10'], ['2', '2', '7', '6', '1'], ['1', '2', '6', '8', '3'], ['1', '2', '8', '7', '9'], ['1', '2', '7', '6', '8'], ['1', '2', '8', '7', '4'], ['1', '2', '7', '6', '8'], ['4', '10', '3', '3', '7']]
-for numbers in dbData:
-    data.append(list(map(lambda n: int(n), numbers)))
 
-times = [0] * (last-first+1) # 숫자당 나온 횟수
-
-for numbers in data:
-    for n in numbers:
-        times[n - 1] += 1
 
 # 확률변수 설정 ----------------------
-prob = [] # 숫자 각각 뽑힐 수 있는 상대적 확률
-x = 20 # 확률 기본값 (모든 숫자 상대적 수치의 최솟값)
 
-for i in times: # 상대적 확률 설정
-    prob.append(max(times) - i + x)
+
+
 
 def list_clone(l:list) -> list: # 리스트 복제 : initprob 바뀌는것 방지
     c=[]
@@ -50,13 +38,37 @@ def percentage(probablity:list) -> list: # 상대적 확률을 절대적 확률�
     total = sum(probablity)
     return [round(i/total,3) * 100 for i in probablity]
 
-result = pick(repeat, picks, prob, (first, last))
+# dbData = ReadDB.readDB()
+data = []
+dbData = pick(repeat,5,[1]*10,(1,10))
+for numbers in dbData:
+    data.append(list(map(lambda n: int(n), numbers)))
 
-counting = [0]*(last-first+1) # 수가 뽑힌 각각의 횟수
-for i in result:
-    for j in range(len(i)):
-        counting[j] += i[j]
+times = [0] * (last-first+1) # 숫자당 나온 횟수
+prob = [] # 숫자 각각 뽑힐 수 있는 상대적 확률
+x = 0 # 확률 기본값 (모든 숫자 상대적 수치의 최솟값)
+# 실험 결과, x 값이 작을 수록 확률 떨어짐짐
 
-print(f"\nTimes number inputed : {times}\n"+
-f"Times number picked : {counting}\n"+
-f"Statistical probablity : {percentage(counting)}\n\n")
+for numbers in data:
+    for n in numbers:
+        times[n - 1] += 1
+
+for i in times: # 상대적 확률 설정
+    prob.append(max(times) - i + x)
+
+result = pick(1, picks, prob, (first, last))
+response = pick(repeat, picks, [1]*(last-first+1), (first,last))
+
+matches = [0] * len(response)
+winners = [0] * (picks+1)
+
+for p in range(len(response)):
+    for i in range(len(response[p])):
+        if response[p][i] == result[0][i] and response[p][i] == 1:
+            matches[p] += 1
+    winners[matches[p]] += 1
+
+print(winners)
+print(percentage(winners))
+for i in range(len(winners)):
+    print(f'{picks-i+1}등 : {percentage(winners)[i]}')
